@@ -1,34 +1,9 @@
-// Copyright (c) 2013 - Michael Woolnough <michael.woolnough@gmail.com>
-// 
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met: 
-// 
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer. 
-// 2. Redistributions in binary form must reproduce the above copyright notice,
-//    this list of conditions and the following disclaimer in the documentation
-//    and/or other materials provided with the distribution. 
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 // Package map3D provides numerous three dimensional drawing functions.
-
 package map3D
 
 import (
-	"github.com/MJKWoolnough/equaler"
 	"fmt"
+	"github.com/MJKWoolnough/equaler"
 )
 
 // Map allows for a custom data storage medium.
@@ -139,10 +114,10 @@ func (m *Map3D) DrawLineFunc(x1, y1, z1, x2, y2, z2 int32, posFunc func(int32, i
 	pos := [6]int32{x1, y1, z1, x2, y2, z2}
 	var (
 		lengths, steps [3]int32
-		maxLength int32
+		maxLength      int32
 	)
 	for i := 0; i < 3; i++ {
-		lengths[i] = pos[i + 3] - pos[i]
+		lengths[i] = pos[i+3] - pos[i]
 		if lengths[i] > 0 {
 			steps[i] = 1
 		} else if lengths[i] < 0 {
@@ -153,7 +128,7 @@ func (m *Map3D) DrawLineFunc(x1, y1, z1, x2, y2, z2 int32, posFunc func(int32, i
 			maxLength = lengths[i]
 		}
 	}
-	errors := [3]int32 {
+	errors := [3]int32{
 		maxLength >> 1,
 		maxLength >> 1,
 		maxLength >> 1,
@@ -191,10 +166,10 @@ func (m *Map3D) DrawPlaneFunc(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4 int
 	pos := [12]int32{x1, y1, z1, x3, y3, z3, x2, y2, z2, x4, y4, z4}
 	var (
 		lengths, steps [6]int32
-		maxLength int32
+		maxLength      int32
 	)
 	for i := 0; i < 6; i++ {
-		lengths[i] = pos[i + 6] - pos[i]
+		lengths[i] = pos[i+6] - pos[i]
 		if lengths[i] > 0 {
 			steps[i] = 1
 		} else if lengths[i] < 0 {
@@ -206,7 +181,7 @@ func (m *Map3D) DrawPlaneFunc(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4 int
 		}
 	}
 	hml := maxLength >> 1
-	errors := [6]int32 {
+	errors := [6]int32{
 		hml,
 		hml,
 		hml,
@@ -214,8 +189,8 @@ func (m *Map3D) DrawPlaneFunc(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4 int
 		hml,
 		hml,
 	}
-// 	fmt.Println("Drawing plane\n	Pos:", pos, "\n	Steps:", steps, "\n	MaxLength:", maxLength)
-	if err := m.drawPlaneFuncLine([6]int32 {pos[0], pos[1], pos[2], pos[3], pos[4], pos[5]}, errors, maxLength, posFunc); err != nil {
+	// 	fmt.Println("Drawing plane\n	Pos:", pos, "\n	Steps:", steps, "\n	MaxLength:", maxLength)
+	if err := m.drawPlaneFuncLine([6]int32{pos[0], pos[1], pos[2], pos[3], pos[4], pos[5]}, errors, maxLength, posFunc); err != nil {
 		return err
 	}
 	for a := int32(0); a < maxLength; a++ {
@@ -235,7 +210,7 @@ func (m *Map3D) DrawPlaneFunc(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4 int
 				errors[c] += maxLength
 			}
 			if changed {
-				if err := m.drawPlaneFuncLine([6]int32 {pos[0], pos[1], pos[2], pos[3], pos[4], pos[5]}, errors, maxLength, posFunc); err != nil {
+				if err := m.drawPlaneFuncLine([6]int32{pos[0], pos[1], pos[2], pos[3], pos[4], pos[5]}, errors, maxLength, posFunc); err != nil {
 					return err
 				}
 			}
@@ -253,8 +228,8 @@ func (m *Map3D) drawPlaneFuncLine(pos, errors [6]int32, maxLength int32, posFunc
 	)
 	maxNum := 0
 	for i := 0; i < 3; i++ {
-		llengths[i] = pos[i + 3] - pos[i]
-		llengthf[i] = int64(maxLength >> 1) + int64(errors[i + 3] - errors[i])
+		llengths[i] = pos[i+3] - pos[i]
+		llengthf[i] = int64(maxLength>>1) + int64(errors[i+3]-errors[i])
 		if llengths[i] > 0 {
 			lsteps[i] = 1
 		} else if llengths[i] < 0 {
@@ -267,46 +242,46 @@ func (m *Map3D) drawPlaneFuncLine(pos, errors [6]int32, maxLength int32, posFunc
 		}
 	}
 	switch maxNum {
-		case 0:
-			order[0] = 0
-			if llengths[1] > llengths[2] {
-				order[1] = 1
-				order[2] = 2
-			} else {
-				order[1] = 2
-				order[2] = 1
-			}
-		case 1:
-			order[0] = 1
-			if llengths[0] > llengths[2] {
-				order[1] = 0
-				order[2] = 2
-			} else {
-				order[1] = 2
-				order[2] = 0
-			}
-		case 2:
-			order[0] = 2
-			if llengths[0] > llengths[1] {
-				order[1] = 0
-				order[2] = 1
-			} else {
-				order[1] = 1
-				order[2] = 0
-			}
+	case 0:
+		order[0] = 0
+		if llengths[1] > llengths[2] {
+			order[1] = 1
+			order[2] = 2
+		} else {
+			order[1] = 2
+			order[2] = 1
+		}
+	case 1:
+		order[0] = 1
+		if llengths[0] > llengths[2] {
+			order[1] = 0
+			order[2] = 2
+		} else {
+			order[1] = 2
+			order[2] = 0
+		}
+	case 2:
+		order[0] = 2
+		if llengths[0] > llengths[1] {
+			order[1] = 0
+			order[2] = 1
+		} else {
+			order[1] = 1
+			order[2] = 0
+		}
 	}
-	lerrors := [3]int32 {
+	lerrors := [3]int32{
 		lmaxLength >> 1,
 		lmaxLength >> 1,
 		lmaxLength >> 1,
 	}
-	lerrorf := [3]int64 {
+	lerrorf := [3]int64{
 		int64(errors[0]) * int64(lmaxLength),
 		int64(errors[1]) * int64(lmaxLength),
 		int64(errors[2]) * int64(lmaxLength),
 	}
 	lml := int64(maxLength) * int64(lmaxLength)
-// 	fmt.Println("	Drawing line\n		Pos:", pos, "\n		Errors:", errors, "\n		MaxLength:", maxLength, "\n		LLengths:", llengths, "\n		LSteps:", lsteps, "\n		lMaxLength:", lmaxLength, "\n		lErrorf:", lerrorf, "\n		llengthf:", llengthf)
+	// 	fmt.Println("	Drawing line\n		Pos:", pos, "\n		Errors:", errors, "\n		MaxLength:", maxLength, "\n		LLengths:", llengths, "\n		LSteps:", lsteps, "\n		lMaxLength:", lmaxLength, "\n		lErrorf:", lerrorf, "\n		llengthf:", llengthf)
 	if err := m.Set(pos[0], pos[1], pos[2], posFunc(errors[0], errors[1], errors[2], maxLength)); err != nil {
 		return err
 	}
@@ -393,6 +368,22 @@ func (m *Map3D) FloodReplace3D(x, y, z int32, toSet equaler.Equaler) {
 	m.PaintReplace(toSet, &region3D{new(region), x, y, z})
 }
 
+// FloodReplace3D will do a flood replace in all dimensions.
+func (m *Map3D) Replace(replace, with equaler.Equaler) error {
+	for i := m.minX; i < m.maxX; i++ {
+		for j := m.minY; j < m.maxY; j++ {
+			for k := m.minZ; k < m.maxZ; k++ {
+				if b := m.Get(i, j, k); b != nil && b.Equal(replace) {
+					if err := m.Set(i, j, k, with); err != nil {
+						return err
+					}
+				}
+			}
+		}
+	}
+	return nil
+}
+
 // Fill will simply set each coordinate within the bounds to the specified data
 func (m *Map3D) Fill(toSet equaler.Equaler) {
 	for i := m.minX; i < m.maxX; i++ {
@@ -406,30 +397,30 @@ func (m *Map3D) Fill(toSet equaler.Equaler) {
 
 // FillArea will copy (repeatedly if necessary) the given data to fill the map.
 func (m *Map3D) FillArea(a *Map3D) {
-	x := a.minX
-	for i := m.minX; i < m.maxX; i++ {
-		y := a.minY
-		for j := m.minY; j < m.maxY; j++ {
+	y := a.minY
+	for j := m.minY; j < m.maxY; j++ {
+		x := a.minX
+		for i := m.minX; i < m.maxX; i++ {
 			z := a.minZ
 			for k := m.minZ; k < m.maxZ; k++ {
 				m.Set(i, j, k, a.Get(x, y, z))
-				if z++; z == a.maxZ { 
+				if z++; z == a.maxZ {
 					z = a.minZ
 				}
 			}
-			if y++; y == a.maxY {
-				y = a.minY
+			if x++; x == a.maxX {
+				x = a.minX
 			}
 		}
-		if x++; x == a.maxX {
-			x = a.minX
+		if y++; y == a.maxY {
+			y = a.minY
 		}
 	}
 }
 
 // FillFun will use the given function to set each coordinate within the bounds.
-func (m *Map3D) FillFunc(eFunc func (int32, int32, int32) equaler.Equaler) {
-	mdx, mdy, mdz := m.maxX - m.minX, m.maxY - m.minY, m.maxZ - m.minZ
+func (m *Map3D) FillFunc(eFunc func(int32, int32, int32) equaler.Equaler) {
+	mdx, mdy, mdz := m.maxX-m.minX, m.maxY-m.minY, m.maxZ-m.minZ
 	for i := int32(0); i < mdx; i++ {
 		mX := m.minX + i
 		for j := int32(0); j < mdy; j++ {
